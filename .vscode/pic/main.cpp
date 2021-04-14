@@ -50,6 +50,7 @@ void Init(Elemtype graph[MAX][MAX], Elemtype vertex, Elemtype edge)        //输
              graph[i][j] = UTB;                      //将所有权值赋值为无穷大
     for (Elemtype k = 0; k < edge;k++)
         {
+            printf("请输入顶点，终点和权值:(起点和重点要求都是大写字母)");
             scanf("%c %c %d",&cinx,&ciny,&weight); 
             //prElemtypef("%c %c %d", &cinx, &ciny, &weight);
             getchar();        //读入顶点，终点和权值
@@ -68,6 +69,7 @@ Elemtype main()
     scanf("%d %d", &core, &edge);
     //prElemtypef("%d %d", core, edge);
     Init(graph,core, edge);
+    printf("最短路径为：\n");
     printf("Total:%d\n",Prim(graph, core));
     return 0;
 }

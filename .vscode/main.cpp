@@ -1,69 +1,87 @@
-
-//
-// Created by LittleCat on 2019/11/11.
-//
-#include"func.h"
-#include<string>
-ElemType IsKuohao(Elemtype elem);
-ElemType IsNum(Elemtype elem);
-ElemType CharRank(Elemtype elem) ;
-ElemType CharJudge(Elemtype elem1,Elemtype elem2) ;
-int main() {
-    int T;
-    printf("请输入需要转化的字符串数量\n");
-    scanf("%d\n", &T);                           //需要进行转化的字符串个数
-    while (T--) {
-        //创建初始符号栈
-        STACK cake = (STACK) malloc(sizeof(stack));
-        cake->top = 0;
-        while(1) {
-            char elem = getchar();
-            //判断输入是否结束
-            if (elem == '#') {               //从栈底逐个输出 
-                while(cake->top) {
-                    putchar(cake->array[cake->top]);
-                    cake->top--;
+#include"func1.h"
+int main()
+{
+	stack *s;//定义栈名 
+    ElemType num = 1,i; 
+    Elemtype Cinchar;  
+	s=Init();
+	StackScanf(s,'#');
+    printf("请输入中缀表达式：");
+    while((Cinchar=getchar())!='\n'){
+		if(Cinchar>='A'&&Cinchar<='Z'||Cinchar>='a'&&Cinchar<='z'||Cinchar>='0'&&Cinchar<='9'||Cinchar=='.'){        //包含数字表达式和字母表达式，支持小数
+			printf("\n第%d次输出为：%c\n",num++,Cinchar);
+        } 
+        else
+        {
+            if(Cinchar=='*'||Cinchar=='/')
+            {
+                while(s->array[s->top-1]!='#'&&(s->array[s->top-1]=='*'||s->array[s->top-1]=='/')){  //保证栈不会越界
+                    printf("\n第%d次输出%c\n",num++,StackPrint(s));
+                    printf("出栈操作，出站前栈内情况(由底到顶为)：");
+                    for(i=s->bottom;i<s->top;i++){
+                    	printf("%c  ",s->array[i]);
+                    }
+                    printf("\n");
+                }
+	     	    StackScanf(s,Cinchar);
+	     	    printf("进栈操作，进栈后(由底到顶为)：");
+	     	    for(i=s->bottom;i<s->top;i++){
+                    printf("%c  ",s->array[i]);
+                }
+	     	    printf("\n");
+            }
+            else if(Cinchar=='+'||Cinchar=='-')
+            {
+                while(s->array[s->top-1]!='('&&s->array[s->top-1]!='#'){
+                	printf("\n第%d次输出%c\n",num++,StackPrint(s));
+                    printf("出栈操作，出站后栈内情况(由底到顶为)：");
+                    for(i=s->bottom;i<s->top;i++){
+                    	printf("%c  ",s->array[i]);
+                    }
+                    printf("\n");
+                }
+	     	    StackScanf(s,Cinchar);
+	     	    printf("进栈操作，进栈后(由底到顶为)：");
+	     	    for(i=s->bottom;i<s->top;i++){
+                    printf("%c  ",s->array[i]);
+                }
+	     	    printf("\n");
+                   
+            }
+            else if(Cinchar=='('){
+             	StackScanf(s,Cinchar);
+             	printf("进栈操作，进站后(由底到顶为)：");
+	     	    for(i=s->bottom;i<s->top;i++){
+                    printf("%c  ",s->array[i]);
+                }
+	     	    printf("\n");
+            }    
+            else if(Cinchar==')')
+            {
+                while(s->array[s->top-1]!='('){
+                	printf("\n第%d次输出%c\n",num++,StackPrint(s));
+                    printf("出栈操作，出站后栈内情况(由底到顶为)：");
+                    for(i=s->bottom;i<s->top;i++){
+                    	printf("%c  ",s->array[i]);
+                    }
+                    printf("\n");
+                }
+				StackPrint(s);
+				printf("出栈操作，出站后栈内情况(由底到顶为)：");
+                for(i=s->bottom;i<s->top;i++){
+                	printf("%c  ",s->array[i]);
                 }
                 printf("\n");
-                break;
             }
-            //此项为操作数，直接输出
-            if (IsNum(elem))
-                putchar(elem);
-            //此项为括号
-            else if (IsKuohao(elem)) {
-                //左括号,入符号栈
-                if (elem == '(') {
-                    cake->array[++cake->top] = elem;
-                }
-                //右括号，依次输出直到'('
-                else {
-                    while (cake->array[cake->top] != '(') {
-                        putchar(cake->array[cake->top]);
-                        cake->top--;
-                    }
-                    //'('出栈
-                    cake->top--;
-                }
-            }
-            //此项为操作符
-            else {
-                h:
-                //操作栈为空或栈顶为'(',入栈
-                if (!cake->top || cake->array[cake->top] == '(') {
-                    cake->array[++cake->top] = elem;
-                }
-                    //比栈顶元素优先级高，入栈
-                else if (CharJudge(elem, cake->array[cake->top])) {
-                    cake->array[++cake->top] = elem;
-                } else {
-                    //出栈
-                    putchar(cake->array[cake->top--]);
-                    goto h;
-                }
-            }
+        }	
+	}
+	while(s->array[s->top-1]!='#'){
+		printf("\n第%d次输出%c\n",num++,StackPrint(s));
+        printf("出栈操作，出站后栈内情况：");
+        for(i=s->bottom;i<s->top;i++){
+        	printf("%c  ",s->array[i]);
         }
-        getchar();
-        free(cake);
-    }
+        printf("\n");
+	} 
+    return 0;
 }
